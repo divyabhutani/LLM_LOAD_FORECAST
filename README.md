@@ -21,17 +21,18 @@ The full pipeline runs end-to-end without manual intervention and is fully conta
 
 For each utility, the following steps are executed:
 1. Train / Holdout Split
-All but the final 24 hours are used as historical context
-The final 24 hours are strictly held out for evaluation
+- All but the final 24 hours are used as historical context
+- The final 24 hours are strictly held out for evaluation
 2. LLM-Based Forecasting
-A lightweight open-source language model (sshleifer/tiny-gpt2) is used as the primary forecasting model
-The model is prompted with recent hourly load values and instructed to directly generate the next 24 hourly load values
+- A lightweight open-source language model (sshleifer/tiny-gpt2) is used as the primary forecasting model
+- The model is prompted with recent hourly load values and instructed to directly generate the next 24 hourly load values
 The LLM is responsible for producing the numerical forecasts, not merely formatting or preprocessing data
 3. Post-Processing
-Enforces exactly 24 numeric forecast values
-Clips negative values to zero
-Ensures outputs are valid and evaluable
-This approach intentionally favors simplicity, transparency, and reproducibility.
+- Enforces exactly 24 numeric forecast values
+- Clips negative values to zero
+- Ensures outputs are valid and evaluable
+
+  This approach intentionally favors simplicity, transparency, and reproducibility.
 
 
 ---
