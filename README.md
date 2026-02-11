@@ -18,16 +18,21 @@ The full pipeline runs end-to-end without manual intervention and is fully conta
 ---
 
 ## Forecasting Methodology
-1. For each utility, the time series is split into:
-   - **History:** all observations except the final 24 hours
-   - **Holdout:** the final 24 hours (used exclusively for evaluation)
-2. A lightweight open-source language model (`sshleifer/tiny-gpt2`) is used as the primary forecasting model, not merely for preprocessing or formatting.
-3. The LLM is prompted with the most recent hourly load values and instructed to directly generate the next 24 hourly load values.
-4. Simple post-processing ensures:
- - Exactly 24 numeric forecast values
- - No negative load values
 
-This design keeps the system readable, runnable, and fully reproducible.
+For each utility, the following steps are executed:
+1. Train / Holdout Split
+All but the final 24 hours are used as historical context
+The final 24 hours are strictly held out for evaluation
+2. LLM-Based Forecasting
+A lightweight open-source language model (sshleifer/tiny-gpt2) is used as the primary forecasting model
+The model is prompted with recent hourly load values and instructed to directly generate the next 24 hourly load values
+The LLM is responsible for producing the numerical forecasts, not merely formatting or preprocessing data
+3. Post-Processing
+Enforces exactly 24 numeric forecast values
+Clips negative values to zero
+Ensures outputs are valid and evaluable
+This approach intentionally favors simplicity, transparency, and reproducibility.
+
 
 ---
 
@@ -43,22 +48,19 @@ The following evaluation metrics are reported:
 
 ## Data Leakage Prevention
 - Forecast inputs include only historical load values available at prediction time
-- Holdout data is used exclusively for evaluation after forecasting
-- No future information is leaked into the LLM prompt
+- Holdout data is never included in the LLM prompt
+- Metrics are computed strictly on unseen data
+- No future information is leaked into model inputs
 
----
-
-## Assumptions
-- Short-term electricity load behavior is primarily driven by recent historical values
-- No external features (e.g., weather or calendar effects) are available
-- This is a prototype intended to demonstrate feasibility rather than optimize accuracy
 
 ---
 
 ## Reproducibility
-The project runs entirely locally using an open-source LLM and does not rely on any
-external APIs or API keys. The full pipeline is containerized using Docker to ensure
-reproducible execution.
+- Forecast inputs include only historical load values available at prediction time
+- Holdout data is never included in the LLM prompt
+- Metrics are computed strictly on unseen data
+- No future information is leaked into model inputs
+
 
 ---
 
@@ -73,7 +75,6 @@ llm-load-forecast/
 ├── Dockerfile
 └── README.md
 ```
-
 
 ---
 
