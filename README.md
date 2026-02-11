@@ -3,10 +3,11 @@
  LLM-Based Short-Term Utility Load Forecasting 
 
 ## Overview
-This project implements a prototype short-term utility load forecasting system where a language model (LLM) is used as the primary forecasting component.
+This project implements a prototype short-term electricity load forecaster where a Large Language Model (LLM) is the primary forecasting component.
 
-For each utility company, the system generates an hourly point forecast for the next 24 hours using only historical load data. The focus of this work is on methodological correctness, clarity, and reproducibility rather than on maximizing forecast accuracy.
+For each utility company, the system produces hourly point forecasts for the next 24 hours using only historical load data. The goal is to demonstrate a clear, reproducible, and methodologically sound approach to LLM-based time-series forecasting, prioritizing code quality and correctness over raw accuracy.
 
+The full pipeline runs end-to-end without manual intervention and is fully containerized for reproducibility.
 ---
 
 ## Data
