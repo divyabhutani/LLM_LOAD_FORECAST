@@ -8,7 +8,7 @@ This project implements a prototype short-term electricity load forecaster where
 For each utility company, the system produces hourly point forecasts for the next 24 hours using only historical load data. The goal is to demonstrate a clear, reproducible, and methodologically sound approach to LLM-based time-series forecasting, prioritizing code quality and correctness over raw accuracy.
 
 The full pipeline runs end-to-end without manual intervention and is fully containerized for reproducibility.
----
+
 
 ## Data
 - **Input:** Three CSV files, one per utility company
