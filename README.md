@@ -1,14 +1,11 @@
-# LLM_LOAD_FORECAST
-
- LLM-Based Short-Term Utility Load Forecasting 
+# LLM-Based Short-Term Utility Load Forecasting (Prototype)
 
 ## Overview
-This project implements a prototype short-term electricity load forecaster where a Large Language Model (LLM) is the primary forecasting component.
+This project implements a prototype short-term utility load forecasting system where a language model (LLM) is used as the primary forecasting component.
 
-For each utility company, the system produces hourly point forecasts for the next 24 hours using only historical load data. The goal is to demonstrate a clear, reproducible, and methodologically sound approach to LLM-based time-series forecasting, prioritizing code quality and correctness over raw accuracy.
+For each utility company, the system generates an hourly point forecast for the next 24 hours using only historical load data. The focus of this work is on methodological correctness, clarity, and reproducibility rather than on maximizing forecast accuracy.
 
-The full pipeline runs end-to-end without manual intervention and is fully containerized for reproducibility.
-
+---
 
 ## Data
 - **Input:** Three CSV files, one per utility company
@@ -18,22 +15,16 @@ The full pipeline runs end-to-end without manual intervention and is fully conta
 ---
 
 ## Forecasting Methodology
+1. For each utility, the time series is split into:
+   - **History:** all observations except the final 24 hours
+   - **Holdout:** the final 24 hours (used exclusively for evaluation)
+2. A lightweight open-source language model (`sshleifer/tiny-gpt2`) is used as the primary forecasting model, not merely for preprocessing or formatting.
+3. The LLM is prompted with the most recent hourly load values and instructed to directly generate the next 24 hourly load values.
+4. Simple post-processing ensures:
+ - Exactly 24 numeric forecast values
+ - No negative load values
 
-For each utility, the following steps are executed:
-1. Train / Holdout Split
-- All but the final 24 hours are used as historical context
-- The final 24 hours are strictly held out for evaluation
-2. LLM-Based Forecasting
-- A lightweight open-source language model (sshleifer/tiny-gpt2) is used as the primary forecasting model
-- The model is prompted with recent hourly load values and instructed to directly generate the next 24 hourly load values
-The LLM is responsible for producing the numerical forecasts, not merely formatting or preprocessing data
-3. Post-Processing
-- Enforces exactly 24 numeric forecast values
-- Clips negative values to zero
-- Ensures outputs are valid and evaluable
-
-  This approach intentionally favors simplicity, transparency, and reproducibility.
-
+This design keeps the system readable, runnable, and fully reproducible.
 
 ---
 
@@ -49,19 +40,22 @@ The following evaluation metrics are reported:
 
 ## Data Leakage Prevention
 - Forecast inputs include only historical load values available at prediction time
-- Holdout data is never included in the LLM prompt
-- Metrics are computed strictly on unseen data
-- No future information is leaked into model inputs
+- Holdout data is used exclusively for evaluation after forecasting
+- No future information is leaked into the LLM prompt
 
+---
+
+## Assumptions
+- Short-term electricity load behavior is primarily driven by recent historical values
+- No external features (e.g., weather or calendar effects) are available
+- This is a prototype intended to demonstrate feasibility rather than optimize accuracy
 
 ---
 
 ## Reproducibility
-- Forecast inputs include only historical load values available at prediction time
-- Holdout data is never included in the LLM prompt
-- Metrics are computed strictly on unseen data
-- No future information is leaked into model inputs
-
+The project runs entirely locally using an open-source LLM and does not rely on any
+external APIs or API keys. The full pipeline is containerized using Docker to ensure
+reproducible execution.
 
 ---
 
@@ -76,6 +70,7 @@ llm-load-forecast/
 ├── Dockerfile
 └── README.md
 ```
+
 
 ---
 
